@@ -22,6 +22,7 @@ const formEl = document.getElementById("album-form");
 // console.log(formEl);
 const mainEl = document.querySelector("#albun-container")
 // console.log(mainEl);
+const albun = [];
 
 /** Eventos
  * Es cualquiera accion que realiza el usuario en la pagina web
@@ -44,65 +45,46 @@ formEl.addEventListener("submit", (event) => {
     event.preventDefault();
 
     const formData = new FormData(formEl);
-    console.log(formData);
-    console.log(formData.get("title")); //Extraer solo 1 elemento
+    // console.log(formData);
+    // console.log(formData.get("title")); //Extraer solo 1 elemento
     const dataArray = [...formData];
-    console.log(dataArray);
+    // console.log(dataArray);
     const dataObject = Object.fromEntries(dataArray);
-    console.log(dataObject);
-
+    // console.log(dataObject);
     // const album = Object.fromEntries([... new FormData(formEl)]);
     // console.log(album);
+    //Obtener informacion para rendelizarlo en el html
 
+    /**
+     * crear un array para almacenar los albums
+     * 1. cada que creemos un album guardarlo en el array
+     * 2. renderizar todos los albums del array, no solo uno
+     * 3.  Usar localstorage para almacenar la info
+     * 4. obtener la informacion guardada y mostrarla por si el usuario actualiza
+     */
+
+    albun.push(dataObject); //Paso 1.
+    console.log(albun);
+    //Limpiamos antes de volver a renderizar las cards, para poder evitar la acumulacion
+    mainEl.innerHTML = "";
+    //Limpiamos todas las cards dentro del array de albums
+    albun.map((albun)=> renderCard(albun, mainEl)); // Renderiza las cards dentro del arreglo donde las estamos guardando
+    // renderCard(dataObject, mainEl);
+    formEl.reset();
+    console.log(albun);
 });
 
-const card = `
-    <div class="card" style="width: 18rem;">
+const renderCard = (albunObject, htmlElement) => {
+    const card = `
+    <div class="card mb-3" style="width: 19rem;">
         <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
-            <a href="#" class="card-link">Card link</a>
-            <a href="#" class="card-link">Another link</a>
+            <h5 class="card-title">${albunObject.title}</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">${albunObject.artis}</h6>
+            <p class="card-text">${albunObject.genre}</p>
+            <a href="#" class="card-link">Año de lanzamiento: ${albunObject.year}</a>
+            <a href="#" class="card-link">Rating: ${albunObject.rating}</a>
         </div>
     </div>
     `;
-
-/**
- * Manipulacion de la interfaz
- * 1. Propiedad llamada innethtml dentro de ella podremos observar todo el html que vive dentro de la etiqueta seleccionada
- * !Si lo usamos sin cuidado podemos borrar todo lo que estaba
- * !No usar innerhtml para renderizar solo texto si estoy recibiendo y mostrando
- * inmediatamente (propenso a inyeccion de html)
- * 2. Propiedad llamada textContent esa solo mostrara el texto que tiene dentro
- */
-
-console.log(mainEl.innerHTML);
-console.log("XXXXXXXXXXXXXXX");
-console.log(mainEl.textContent);
-
-mainEl.innerHTML += "<h1>Hola CH71</h1>";
-mainEl.innerHTML += card; //Se agrega el += para no remplazar todo lo anterior si no para poder agregar a lo anterior
-console.log(mainEl.innerHTML);
-
-// mainEl.textContent += "hola";
-// mainEl.textContent = card;
-
-/**
- * inset Adjacent HTML
- * Permite insertar html en el contenedor sin borrar lo que ya esta y en una posicion especifica, tiene 4 posiciones
- * 1. beforebegin
- * 2. beforeend
- * 3. afterbeging
- * 4. afterend
- */
-
-mainEl.insertAdjacentHTML("afterbegin", "<h1>Hola mundo</h1>");
-
-mainEl.insertAdjacentHTML("afterend", "<h1>Hola mundo</h1>");
-
-mainEl.insertAdjacentHTML("beforebegin", "<h1>Hola mundo</h1>");
-
-mainEl.insertAdjacentHTML("beforeend", "<h1>Hola mundo</h1>");
-
-mainEl.insertAdjacentHTML("beforeend", card);
+    htmlElement.insertAdjacentHTML("beforeend", card);
+}
