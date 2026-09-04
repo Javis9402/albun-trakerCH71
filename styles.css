@@ -1,13 +1,15 @@
-body{
+body {
     background-color: aquamarine;
 }
 
-/* body{
+/*
+* CSS Andres ayuda 
+body{
     display: flex;
     min-height: 100vh;
-} */
+}
 
-/* *Creacion de navbar vertical
+*Creacion de navbar vertical
 nav{
     width: 250px;
     min-width: 250px;
@@ -19,13 +21,18 @@ nav{
     flex-direction: column;
     justify-content: space-between;
 }
+*/
 
-/* *Agregado color blanco porque me aparecian en color azul
-i{
-    color: white;
-} */
-
-/* main{
+main {
     padding: 10px;
-    border: 10px solid red;
-} */
+    /* border: 10px solid red; */
+    min-width: 80%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax (100px, 1fr));
+    gap: 10 px;
+}
+
+.card {
+    /* Que la altura de la card se ajuste al contenido de la card */
+    max-width: fit-content;
+}

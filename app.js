@@ -22,7 +22,7 @@ const formEl = document.getElementById("album-form");
 // console.log(formEl);
 const mainEl = document.querySelector("#albun-container")
 // console.log(mainEl);
-const albun = [];
+let albun = [];
 
 /** Eventos
  * Es cualquiera accion que realiza el usuario en la pagina web
@@ -41,6 +41,22 @@ const albun = [];
  * object from entries recibe un array de arrays
  */
 
+//Evento que se ejecuta al cargar la pagina, estamos escuchando la carga de la pagina
+window.addEventListener("load", (event) => {
+    // console.log(event); //Escuchamos lo que dice el evento y vemos que se ejecuta correctamente
+
+    if (getItemLocalStorage("albums") == undefined) return;
+    albun = [...getItemLocalStorage("albums")];
+    console.log(albun); //Para poder visualizar lo que se esta guardando en el local storage
+
+    albun.map((albun)=>renderCard(albun, mainEl)); //Poder renderisar los datos guardados en nuestra pagina
+    /**
+     * Segunda opcion
+     * getItemLocalStorage("albums").forEach(("albums") => { albun.push(albun)});
+     */
+})
+
+//Evento para escuchar la carga o el enviar del formulario, usamos el DOM para definir solo el espacio del FORMS
 formEl.addEventListener("submit", (event) => {
     event.preventDefault();
 
@@ -64,15 +80,33 @@ formEl.addEventListener("submit", (event) => {
      */
 
     albun.push(dataObject); //Paso 1.
-    console.log(albun);
+    // console.log(albun);
     //Limpiamos antes de volver a renderizar las cards, para poder evitar la acumulacion
     mainEl.innerHTML = "";
     //Limpiamos todas las cards dentro del array de albums
-    albun.map((albun)=> renderCard(albun, mainEl)); // Renderiza las cards dentro del arreglo donde las estamos guardando
+    //Paso 2
+    albun.map((albun) => renderCard(albun, mainEl)); // Renderiza las cards dentro del arreglo donde las estamos guardando
     // renderCard(dataObject, mainEl);
     formEl.reset();
-    console.log(albun);
+    // console.log(albun);
+    setLocalStorage("albums", albun); // Paso 3
 });
+
+const setLocalStorage = (key, value) => {
+    //Paso 1 convetir el valor a texto
+    const textValue = JSON.stringify(value);
+    // Paso 2 almacenar
+    localStorage.setItem(key, textValue);
+}
+
+const getItemLocalStorage = (key) => {
+    if (localStorage.getItem(key) == null) return;
+    //Covertimos de texto a lenguaje JS
+    const data = JSON.parse(localStorage.getItem(key));
+    return data;
+}
+
+
 
 const renderCard = (albunObject, htmlElement) => {
     const card = `
